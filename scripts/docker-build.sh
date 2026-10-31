@@ -37,6 +37,7 @@ _extra_env=()
 [ -n "${_runner_environment:-}" ] && _extra_env+=(-e _runner_environment)
 [ -n "${GITHUB_OUTPUT:-}" ] && _extra_env+=(-e GITHUB_OUTPUT)
 [ -n "${ARCH:-}" ] && _extra_env+=(-e ARCH)
+[ -n "${HELIUM_JOBS:-}" ] && _extra_env+=(-e HELIUM_JOBS)
 [ -n "${SISO_REAPI_ADDRESS:-}" ] && _extra_env+=(-e SISO_REAPI_ADDRESS)
 [ -n "${SISO_REAPI_INSTANCE:-}" ] && _extra_env+=(-e SISO_REAPI_INSTANCE)
 
@@ -57,7 +58,9 @@ if [ -n "${GITHUB_OUTPUT:-}" ]; then
     _gha_mount=(-v "$GITHUB_OUTPUT:$GITHUB_OUTPUT")
 fi
 
-cd "${_base_dir}" && docker run --rm -i \
+# HELIUM_DOCKER_ARGS: extra `docker run` flags (resource caps, container name), word-split on purpose.
+# shellcheck disable=SC2086
+cd "${_base_dir}" && docker run --rm -i ${HELIUM_DOCKER_ARGS:-} \
     -u "${_user_uidgid}" \
     -v "${_base_dir}:/repo" \
     "${_gha_mount[@]}" \

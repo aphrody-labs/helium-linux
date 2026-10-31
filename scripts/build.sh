@@ -27,4 +27,4 @@ helium_version
 helium_resources
 write_gn_args
 gn_gen
-build
+build ${HELIUM_JOBS:+-j "$HELIUM_JOBS"}
